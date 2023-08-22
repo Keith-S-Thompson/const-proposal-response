@@ -85,6 +85,13 @@ c.c:3:19: error: expression is not an integer constant expression; folding it to
 $
 ```
 
+Microsoft's Visual C compiler (Visual Studio Community 2022, Version
+17.3.4) does not support VLAs.  With appropriate settings, it sets
+`__STDC_VERSION__` to `201710L`, and `__STDC_NO_VLA__` to `1`.
+Given the declaration `const int n = 1 + 2;`, it does not treat `n`
+as a constant expression, and it rejects `const int a[n];` with 
+"error C2057: expected constant expression".
+
 > However, during National Body (NB) comment processing, an NB comment
 > pointed out that there was a lot of code relying on the fact that this
 > was being treated -- not just by the backend with its optimizations
