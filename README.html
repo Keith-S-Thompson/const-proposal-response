@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>const proposal response</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<p>References:</p>
+<ul>
+<li><a
+href="https://thephd.dev/_vendor/future_cxx/papers/C%20-%20Initialized%20const%20Integer%20Declarations.html"
+class="uri">https://thephd.dev/_vendor/future_cxx/papers/C%20-%20Initialized%20const%20Integer%20Declarations.html</a></li>
+<li><a
+href="https://twitter.com/__phantomderp/status/1693696514931986728"
+class="uri">https://twitter.com/__phantomderp/status/1693696514931986728</a></li>
+</ul>
+<p>The proposal is that a block-scope declaration of an integer object
+with a <code>const</code> keyword and an initializer that’s a integer
+constant expression should be implicitly <code>constexpr</code>.</p>
+<p>C++ already has a similar rule, introduced before C++ acquired the
+<code>constexpr</code> keyword.</p>
+<p>I submit that the proposed change is rendered unnecessary by the
+introduction of the <code>constexpr</code> keyword (introduced in the
+same 2023 edition of the C standard for which this proposal is being
+made), and that it would introduce more confusion about the meaning of
+<code>const</code>.</p>
+<p>A minor point: Quoting the Abstract of the proposal:</p>
+<blockquote>
+<p>It asks that such <code>const</code> integer type declarations that
+are both declared and initialized in the same statement are implicitly
+made <code>constexpr</code>, thereby fulfilling the expectations of
+users.</p>
+</blockquote>
+<p>This could be worded better. The phrase “integer type declarations”
+suggests declarations of integer types, which is clearly not the intent.
+The declarations being discussed are also definitions. And the “same
+statement” is incorrect, since declarations (at least in C) are not
+statements.</p>
+<p>The first example in the proposal is:</p>
+<pre><code>int main () {
+  const int n = 1 + 2;
+  const int a[n];
+  return sizeof(a);
+}</code></pre>
+<p>(The <code>const</code> on the definition of <code>a</code> seems
+superfluous. And I’d drop the parentheses on the <code>sizeof</code>,
+but that’s just me.)</p>
+<p>Under current C rules, this is unambiguous. <code>n</code> is not an
+integer constant expression, and <code>a</code> is a VLA.</p>
+<blockquote>
+<p>Will <code>sizeof(a)</code> be executed at compile-time or will it be
+run at execution time (AKA run-time) and pull the value from somewhere
+in the binary?</p>
+</blockquote>
+<p>A sufficiently clever compiler (gcc and clang certainly both qualify)
+can evaluate some non-constant expressions at compile time. The fact
+that the generated code is the same as it would be if <code>n</code>
+were replaced by <code>3</code> does not imply that the compiler is
+treating <code>a</code> as a VLA. And in fact, both gcc and clang warn
+about the definition of <code>a</code> with invoked with the
+<code>-Wvla</code> option:</p>
+<pre><code>$ gcc -c -std=c17 -pedantic-errors -Wvla c.c
+c.c: In function ‘main’:
+c.c:3:3: warning: ISO C90 forbids variable length array ‘a’ [-Wvla]
+    3 |   const int a[n];
+      |   ^~~~~
+$ clang -c -std=c17 -pedantic-errors -Wvla c.c
+c.c:3:15: warning: variable length array used [-Wvla]
+  const int a[n];
+              ^
+1 warning generated.
+$</code></pre>
+<p>And both reject it with <code>-std=c90 -pedantic-errors</code>.</p>
+<p>Furthermore, it’s clear that neither gcc nor clang treats
+<code>n</code> in the example as an integer constant expression, as we
+can see by adding an attempt to use it in a case label:</p>
+<pre><code>$ gcc -std=c17 -pedantic-errors -c c.c
+c.c: In function ‘main’:
+c.c:3:14: error: case label does not reduce to an integer constant
+    3 |   switch (3) case n:;
+      |              ^~~~
+$ clang -std=c17 -pedantic-errors -c c.c
+c.c:3:19: error: expression is not an integer constant expression; folding it to a constant is a GNU extension [-Werror,-Wgnu-folding-constant]
+  switch (3) case n:;
+                  ^
+1 error generated.
+$</code></pre>
+<blockquote>
+<p>However, during National Body (NB) comment processing, an NB comment
+pointed out that there was a lot of code relying on the fact that this
+was being treated – not just by the backend with its optimizations – but
+by the frontend of many compilers to be a plain, compile-time C
+array</p>
+</blockquote>
+<p>I’m not aware of any valid code whose behavior differs depending on
+whether an array whose length is not a constant expression but can be
+evaluated at compile time is a VLA or not, for a compiler that supports
+VLAs. A VLA with compile-time computable bounds is very nearly
+equivalent to a non-VLA array, and identical code can be generated for
+both. Quite possibly I’ve missed something. I’d like to see some
+concrete examples (depending on the semantics of C code, not on
+examining the generated machine or assembly code).</p>
+<p>C23 introduces the <code>constexpr</code> keyword, borrowed from C++.
+If I want <code>a</code> to be a non-VLA array, I’ll define
+<code>n</code> as <code>constexpr</code>, not as <code>const</code>. Or,
+if I don’t have a C23 compiler, I’ll use one of several
+pre-<code>constexpr</code> tricks:</p>
+<ul>
+<li><code>enum { n = 1 + 2 }; // works only for type int prior to C23</code></li>
+<li><code>#define N (1 + 2)</code></li>
+</ul>
+<p>And of course the proposed change does not help users of pre-C23
+compilers, unless some of them implement the change as a
+(non-conforming) extension.</p>
+<p>I’ve always found it somewhat awkward to explain to beginners what
+<code>const</code> means in C. The name makes it extremely tempting to
+conflate <code>const</code> with “constant”, but in fact (at least in
+current C), <code>const</code> means “read-only”, not “compile-time
+constant”. These are very distinct concepts, and I oppose conflating
+them. For example:</p>
+<pre><code>const int r = rand();</code></pre>
+<p>is perfectly valid, and</p>
+<pre><code>constexpr int r = rand();</code></pre>
+<p>is a constraint violation.</p>
+<p>It’s much easier to explain that <code>const</code> means
+“read-only”, than to explain that <code>const</code> means “read-only”
+<em>except</em> in certain cases where it also means “compile-time
+constant”.</p>
+<p>As far as I can tell, existing C code <em>does not</em> rely on
+<code>const</code>-defined integer objects being treated as compile-time
+constants. In the case of array bounds, some such code may
+unintentionally rely on compiler support for VLAs. If such code needs to
+be compiled with an implementation that forbids VLAs, the fix is to
+replace <code>const</code> by <code>constexpr</code>.</p>
+<pre><code>int main () {
+  constexpr int n = 1 + 2;
+  int a[n];
+  return sizeof(a);
+}</code></pre>
+<p>– Keith Thompson <a href="mailto:Keith.S.Thompson@gmail.com"
+class="email">Keith.S.Thompson@gmail.com</a></p>
+</body>
+</html>
