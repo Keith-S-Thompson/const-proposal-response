@@ -28,6 +28,7 @@ And the "same statement" is incorrect, since declarations (at least
 in C) are not statements.
 
 The first example in the proposal is:
+
 ```
 int main () {
   const int n = 1 + 2;
@@ -49,9 +50,10 @@ constant expression, and `a` is a VLA.
 A sufficiently clever compiler (gcc and clang certainly both qualify)
 can evaluate some non-constant expressions at compile time.  The fact
 that the generated code is the same as it would be if `n` were replaced
-by `3` does not imply that the compiler is treating `a` as a VLA.
+by `3` does not imply that the compiler is not treating `a` as a VLA.
 And in fact, both gcc and clang warn about the definition of `a` with
 invoked with the `-Wvla` option:
+
 ```
 $ gcc -c -std=c17 -pedantic-errors -Wvla c.c
 c.c: In function ‘main’:
@@ -71,6 +73,7 @@ And both reject it with `-std=c90 -pedantic-errors`.
 Furthermore, it's clear that neither gcc nor clang treats `n` in the
 example as an integer constant expression, as we can see by adding
 an attempt to use it in a case label:
+
 ```
 $ gcc -std=c17 -pedantic-errors -c c.c
 c.c: In function ‘main’:
@@ -89,20 +92,24 @@ Microsoft's Visual C compiler (Visual Studio Community 2022, Version
 17.3.4) does not support VLAs.  With appropriate settings, it sets
 `__STDC_VERSION__` to `201710L`, and `__STDC_NO_VLA__` to `1`.
 Given the declaration
+
 ```
 const int n = 1 + 2;
 ```
+
 it does not treat `n` as a constant expression, and it rejects
+
 ```
 const int a[n];
 ```
+
 with "error C2057: expected constant expression".
 
-> However, during National Body (NB) comment processing, an NB comment
-> pointed out that there was a lot of code relying on the fact that this
-> was being treated -- not just by the backend with its optimizations
-> -- but by the frontend of many compilers to be a plain, compile-time
-> C array
+> However, during National Body (NB) comment processing, an NB
+> comment pointed out that there was a lot of code relying on the
+> fact that this was being treated -- not just by the backend with
+> its optimizations -- but by the frontend of many compilers to be
+> a plain, compile-time C array
 
 I'm not aware of any valid code whose behavior differs depending
 on whether an array whose length is not a constant expression but
@@ -134,10 +141,13 @@ very distinct concepts, and I oppose conflating them.  For example:
 ```
 const int r = rand();
 ```
+
 is perfectly valid, and
+
 ```
 constexpr int r = rand();
 ```
+
 is a constraint violation.
 
 It's much easier to explain that `const` means "read-only", than
