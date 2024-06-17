@@ -70,9 +70,9 @@ $
 
 And both reject it with `-std=c90 -pedantic-errors`.
 
-Furthermore, it's clear that neither gcc nor clang treats `n` in the
-example as an integer constant expression, as we can see by adding
-an attempt to use it in a case label:
+Furthermore, it's clear that gcc does not treat `n` in the example
+as an integer constant expression, as we can see by adding an attempt
+to use it in a case label:
 
 ```
 $ gcc -std=c17 -pedantic-errors -c c.c
@@ -87,6 +87,18 @@ c.c:3:19: error: expression is not an integer constant expression; folding it to
 1 error generated.
 $
 ```
+
+clang does treat `n` as an integer constant expression and allows its
+use in a case label, but with `-pedantic` it does produce a diagnostic:
+
+```
+c.c:3:21: warning: expression is not an integer constant expression; folding it to a constant is a GNU extension [-Wgnu-folding-constant]
+    switch (3) case n:;
+                    ^
+```
+
+(An earlier version of this article said that clang doesn't allow
+`case n:`.  In fact it does by default.)
 
 Microsoft's Visual C compiler (Visual Studio Community 2022, Version
 17.3.4) does not support VLAs.  With appropriate settings, it sets
